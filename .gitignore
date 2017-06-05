@@ -1,0 +1,4 @@
+*.swp
+.DS_STORE
+*.dat
+__pycache__/
