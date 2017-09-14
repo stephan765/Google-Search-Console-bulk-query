@@ -173,11 +173,22 @@ def main():
         with open(args.pages, "r") as file_handle:
             pages = []
             for line in file_handle.readlines():
+                if args.property_uri in line:
+                    pages.append(line.strip("\n"))
+                else:
+                    sys.exit("Your page list contains pages which don't have the GSC property in the URL. GSC API needs full URLs not just paths.")
+
+    # Check if user has remembered to put trailing slash on path
+    # if not add
+    if args.output_location:
+        if args.output_location[-1:] != "/":
+            args.output_location = args.output_location+"/"
 
     # Prepare the API service
     credentials = load_oauth2_credentials(args.secrets_file)
     service = create_search_console_client(credentials)
 
+    # Convert date strings to datetime objects
     start_date = datetime.strptime(args.start_date, "%Y-%m-%d")
     end_date = datetime.strptime(args.end_date, "%Y-%m-%d")
 
